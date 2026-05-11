@@ -1,0 +1,41 @@
+services:
+  automata-base:
+    image: automata-base:latest
+    build:
+      context: ./shared/images/automata-base
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - DISPLAY=${DISPLAY:-:0}
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./:/workspace
+      - ros2_ws:/ros2_ws
+    network_mode: host
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+
+  automata-ml:
+    image: automata-ml:latest
+    build:
+      context: ./shared/images/automata-ml
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    volumes:
+      - ./:/workspace
+      - hf_cache:/root/.cache/huggingface
+      - wandb_cache:/root/.local/share/wandb
+    network_mode: host
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+
+volumes:
+  ros2_ws:
+  hf_cache:
+  wandb_cache:
