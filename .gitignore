@@ -1,5 +1,68 @@
-log/
-build/
-install/
+# ─── Rust ─────────────────────────────────────────────────────────────────────
+target/
+Cargo.lock          # only ignore in libraries, not binaries
+                    # remove this line if firmware/Cargo.lock should be tracked
 
-.devcontainer
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# ─── ROS2 / colcon ────────────────────────────────────────────────────────────
+log/
+install/
+build/
+
+# ─── Jupyter ──────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ─── ML / experiment tracking ─────────────────────────────────────────────────
+wandb/
+mlruns/
+*.onnx
+checkpoints/
+*.pt
+*.pth
+*.safetensors
+
+# ─── Docker ───────────────────────────────────────────────────────────────────
+.docker/
+
+# ─── Terraform ────────────────────────────────────────────────────────────────
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+.terraform.lock.hcl
+override.tf
+override.tf.json
+
+# ─── Ansible ──────────────────────────────────────────────────────────────────
+*.retry
+vault/.vault_pass
+
+# ─── IDE ──────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# ─── Secrets ──────────────────────────────────────────────────────────────────
+.env
+.env.*
+secrets.yml
+*_rsa
+*_ed25519
+*.pem
+log/
+.devcontainer/
