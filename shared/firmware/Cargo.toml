@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "crates/encoder",
+    "crates/encoder_sim",
+]
+resolver = "2"
