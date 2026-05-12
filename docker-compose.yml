@@ -12,7 +12,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ./:/workspace
-      - ros2_ws:/ros2_ws
+      - ros2_ws_install:/ros2_ws/install 
     network_mode: host
     working_dir: /workspace
     stdin_open: true
@@ -46,7 +46,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ./:/workspace
-      - ros2_ws:/ros2_ws
+      - ros2_ws_install:/ros2_ws/install
     network_mode: host
     working_dir: /workspace
     stdin_open: true
@@ -54,6 +54,6 @@ services:
     command: sleep infinity
 
 volumes:
-  ros2_ws:
+  ros2_ws_install:  
   hf_cache:
   wandb_cache:

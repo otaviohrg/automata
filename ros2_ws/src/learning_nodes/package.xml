@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="3">
+    <name>learning_nodes</name>
+    <version>0.0.1</version>
+    <description>Phase 1 learning nodes</description>
+    <maintainer email="you@example.com">Your Name</maintainer>
+    <license>MIT</license>
+    <buildtool_depend>ament_cmake</buildtool_depend>
+    <depend>rclcpp</depend>
+    <depend>std_msgs</depend>
+    <depend>sensor_msgs</depend>
+    <depend>geometry_msgs</depend>
+</package>
