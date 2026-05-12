@@ -35,6 +35,24 @@ services:
     stdin_open: true
     tty: true
 
+  automata-dev:
+    image: automata-base:latest
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - DISPLAY=${DISPLAY:-:0}
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./:/workspace
+      - ros2_ws:/ros2_ws
+    network_mode: host
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    command: sleep infinity
+
 volumes:
   ros2_ws:
   hf_cache:
