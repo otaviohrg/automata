@@ -1,0 +1,29 @@
+{
+  "name": "automata-base",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "automata-dev",
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.pylance",
+        "ms-iot.vscode-ros",
+        "twxs.cmake",
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "charliermarsh.ruff",
+        "rust-lang.rust-analyzer",
+        "vadimcn.vscode-lldb"
+      ]
+    }
+  },
+  "postCreateCommand": "bash -lc 'source /opt/ros/jazzy/setup.bash && echo Dev container ready'",
+  "remoteEnv": {
+    "DISPLAY": "${localEnv:DISPLAY}",
+    "MUJOCO_GL": "egl"
+  }
+}
+

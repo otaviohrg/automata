@@ -1,6 +1,7 @@
 FROM automata-base:latest
 
 ENV PYTHONUNBUFFERED=1
+ENV UV_HTTP_TIMEOUT=600
 
 SHELL ["/bin/bash", "-c"]
 
@@ -10,15 +11,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-# PyTorch CUDA 12.6
-RUN uv pip install \
-    torch \
-    torchvision \
-    torchaudio \
-    --index-url https://download.pytorch.org/whl/cu126
+# PyTorch stable CUDA 12.4 stack
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install \
+    torch==2.6.0 \
+    torchvision==0.21.0 \
+    torchaudio==2.6.0 \
+    --index-url https://download.pytorch.org/whl/cu124
 
 # ML / robotics tooling
-RUN uv pip install \
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install \
     wandb \
     mlflow \
     onnx \
@@ -38,3 +41,4 @@ RUN uv pip install \
     timm
 
 WORKDIR /workspace
+

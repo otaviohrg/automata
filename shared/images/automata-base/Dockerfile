@@ -47,6 +47,7 @@ RUN uv venv /opt/venv --python python3
 # Install Python packages into the venv
 RUN uv pip install \
     mujoco \
+    pyyaml \
     numpy \
     scipy \
     matplotlib \
@@ -59,6 +60,9 @@ RUN uv pip install \
     grpcio \
     grpcio-tools \
     protobuf
+
+RUN echo "/opt/ros/jazzy/lib/python3.12/site-packages" \
+    >> /opt/venv/lib/python3.12/site-packages/ros2.pth
 
 RUN rosdep init || true && rosdep update || true
 

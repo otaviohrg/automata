@@ -65,6 +65,6 @@ secrets.yml
 *_ed25519
 *.pem
 log/
-.devcontainer/
+.devcontainer/.env
 shared/telemetry_server/proto/*.pb.go
 shared/telemetry_server/proto/*_pb2*.py
