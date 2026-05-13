@@ -54,5 +54,5 @@ done
 echo "[build_ros2] done — sourcing workspace..."
 source "$INSTALL_BASE/setup.bash"
 
-echo "[build_ros2] packages available:"
-ros2 pkg list | grep -v "^/" || true
+#echo "[build_ros2] packages available:"
+#ros2 pkg list | grep -v "^/" || true
