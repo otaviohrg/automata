@@ -31,7 +31,7 @@ impl Encoder {
     }
 
     pub fn velocity_rad_per_sec(&self) -> f32 {
-        (self.velocity_counts_per_sec as f32 / self.counts_per_rev as f32)
+        (self.velocity_counts_per_sec / self.counts_per_rev as f32)
             * 2.0
             * core::f32::consts::PI
     }

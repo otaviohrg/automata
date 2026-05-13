@@ -2,7 +2,6 @@ use encoder::Encoder;
 
 fn main() {
     let mut enc = Encoder::new(1024);
-    let counts_per_rev = 1024;
 
     println!("Simulating encoder at 50Hz for 2 seconds");
     println!("{:<6} {:<8} {:<12} {:<14}",
