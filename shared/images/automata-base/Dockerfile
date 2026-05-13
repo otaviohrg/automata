@@ -55,7 +55,10 @@ RUN uv pip install \
     imageio \
     gymnasium \
     gymnasium-robotics \
-    catkin-pkg
+    catkin-pkg \
+    grpcio \
+    grpcio-tools \
+    protobuf
 
 RUN rosdep init || true && rosdep update || true
 

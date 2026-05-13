@@ -66,3 +66,5 @@ secrets.yml
 *.pem
 log/
 .devcontainer/
+shared/telemetry_server/proto/*.pb.go
+shared/telemetry_server/proto/*_pb2*.py
