@@ -1,6 +1,5 @@
 name: CI Gate
 on:
-  push:
   pull_request:
 
 jobs:
