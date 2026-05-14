@@ -1,17 +1,19 @@
-name: CI - container images
+name: Publish images
 on:
   push:
+    branches: [main]
     paths:
       - 'shared/images/**'
-      - '.github/workflows/ci-containers.yml'
   pull_request:
     paths:
       - 'shared/images/**'
-  workflow_call:
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
 
@@ -25,7 +27,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build automata-base
+      - name: Build and push automata-base
         uses: docker/build-push-action@v5
         with:
           context: shared/images/automata-base
@@ -34,7 +36,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Build automata-ml
+      - name: Build and push automata-ml
         uses: docker/build-push-action@v5
         with:
           context: shared/images/automata-ml
