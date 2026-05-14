@@ -19,3 +19,6 @@ packages = ["src/helix"]
 
 [project.urls]
 Repository = "https://github.com/otaviohrg/helix-core"
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff", "mypy"]

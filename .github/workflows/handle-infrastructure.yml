@@ -93,6 +93,5 @@ jobs:
       - name: Install and test
         run: |
           uv venv .venv
-          source .venv/bin/activate
           uv pip install -e ".[dev]"
-          pytest tests/ -v
+          .venv/bin/pytest tests/ -v
