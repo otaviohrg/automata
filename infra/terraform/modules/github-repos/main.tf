@@ -57,7 +57,11 @@ resource "github_branch_protection" "main" {
   required_status_checks {
     strict = true
     contexts = [
-      "CI Gate / all-checks-passed",
+      "Publish images / build-and-push",
+      "Handle infrastructure / terraform",
+      "Handle infrastructure / ansible-lint",
+      "Handle infrastructure / telemetry-server",
+      "Handle infrastructure / firmware",
     ]
   }
 
