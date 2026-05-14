@@ -28,17 +28,17 @@
       debug:
         msg: "GPU check: {{ 'PASS' if gpu_result.rc == 0 else 'FAIL' }}"
 
-    - name: Verify PyTorch CUDA in automata-ml
+    - name: Verify PyTorch CUDA in helix-ml
       command: >
-        docker compose run --rm automata-ml
+        docker compose run --rm helix-ml
         python3 -c "import torch; assert torch.cuda.is_available()"
       args:
         chdir: "{{ playbook_dir }}/../../"
       changed_when: false
 
-    - name: Verify rclpy and mujoco in automata-base
+    - name: Verify rclpy and mujoco in helix-base
       command: >
-        docker compose run --rm automata-base
+        docker compose run --rm helix-base
         bash -lc "python3 -c 'import rclpy; import mujoco; print(\"both work\")'"
       args:
         chdir: "{{ playbook_dir }}/../../"

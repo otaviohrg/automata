@@ -1,0 +1,18 @@
+[project]
+name = "helix-sdk"
+version = "0.1.0"
+description = "Shared utilities for the automata robotics portfolio"
+requires-python = ">=3.10"
+dependencies = [
+    "grpcio>=1.60.0",
+    "protobuf>=4.25.0",
+    "pyyaml>=6.0.0",
+    "numpy>=1.26.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.urls]
+Repository = "https://github.com/otaviohrg/helix-core"

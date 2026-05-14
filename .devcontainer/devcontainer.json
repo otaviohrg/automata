@@ -1,7 +1,7 @@
 {
-  "name": "automata-base",
+  "name": "helix-base",
   "dockerComposeFile": "../docker-compose.yml",
-  "service": "automata-dev",
+  "service": "helix-dev",
   "workspaceFolder": "/workspace",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "shutdownAction": "stopCompose",

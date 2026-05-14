@@ -27,20 +27,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push automata-base
+      - name: Build and push helix-base
         uses: docker/build-push-action@v5
         with:
-          context: shared/images/automata-base
+          context: shared/images/helix-base
           push: ${{ github.ref == 'refs/heads/main' }}
-          tags: ghcr.io/${{ github.repository_owner }}/automata-base:latest
+          tags: ghcr.io/${{ github.repository_owner }}/helix-base:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Build and push automata-ml
+      - name: Build and push helix-ml
         uses: docker/build-push-action@v5
         with:
-          context: shared/images/automata-ml
+          context: shared/images/helix-ml
           push: ${{ github.ref == 'refs/heads/main' }}
-          tags: ghcr.io/${{ github.repository_owner }}/automata-ml:latest
+          tags: ghcr.io/${{ github.repository_owner }}/helix-ml:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max

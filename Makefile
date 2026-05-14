@@ -4,17 +4,17 @@ REGISTRY  = ghcr.io/$(GHCR_USER)
 .PHONY: build push dev down setup telemetry build-ros2
 
 build:
-	docker compose build automata-base
-	docker compose build automata-ml
+	docker compose build helix-base
+	docker compose build helix-ml
 
 push: build
-	docker tag automata-base:latest $(REGISTRY)/automata-base:latest
-	docker tag automata-ml:latest   $(REGISTRY)/automata-ml:latest
-	docker push $(REGISTRY)/automata-base:latest
-	docker push $(REGISTRY)/automata-ml:latest
+	docker tag helix-base:latest $(REGISTRY)/helix-base:latest
+	docker tag helix-ml:latest   $(REGISTRY)/helix-ml:latest
+	docker push $(REGISTRY)/helix-base:latest
+	docker push $(REGISTRY)/helix-ml:latest
 
 dev:
-	docker compose up -d automata-dev
+	docker compose up -d helix-dev
 
 down:
 	docker compose down
@@ -28,7 +28,7 @@ telemetry:
 	$(MAKE) -C shared/telemetry_server run
 
 build-ros2:
-	docker exec -it automata-automata-dev-1 \
+	docker exec -it helix-helix-dev-1 \
 	  bash /workspace/scripts/build_ros2.sh
 
 lint:

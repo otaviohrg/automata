@@ -1,4 +1,4 @@
-FROM ghcr.io/otaviohrg/automata-base:latest
+FROM ghcr.io/otaviohrg/helix-base:latest
 
 ENV PYTHONUNBUFFERED=1
 ENV UV_HTTP_TIMEOUT=600

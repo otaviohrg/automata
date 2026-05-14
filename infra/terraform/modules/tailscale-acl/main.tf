@@ -67,6 +67,6 @@ resource "tailscale_acl" "name" {
   )
 }
 
-resource "tailscale_dns_nameservers" "automata" {
+resource "tailscale_dns_nameservers" "helix" {
   nameservers = ["100.100.100.100", "1.1.1.1"]
 }

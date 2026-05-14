@@ -14,13 +14,13 @@ sudo pacman -S ansible
 ansible-galaxy collection install community.general kewlfft.aur
 
 # 3. Create vault password file
-# Password is stored in your password manager under "automata ansible vault"
+# Password is stored in your password manager under "helix-core ansible vault"
 echo "your-vault-password" > ~/.ansible_vault_pass
 chmod 600 ~/.ansible_vault_pass
 
 # 4. Clone the repo
-git clone git@github.com:otaviohrg/automata.git
-cd automata
+git clone git@github.com:otaviohrg/helix-core.git
+cd helix-core
 
 # 5. Run workstation playbook — installs everything
 # Enter your sudo password when prompted
@@ -39,7 +39,7 @@ make build
 #   tailscale_oauth_client_id     = ""
 #   tailscale_oauth_client_secret = ""
 #   tailnet                       = ""
-# Values are in your password manager under "automata terraform"
+# Values are in your password manager under "helix-core terraform"
 
 # 9. Restore Terraform-managed resources
 cd infra && make tf-init
@@ -88,18 +88,18 @@ Run these in order — each depends on the previous passing.
 - [ ] `tailscale status` shows workstation authenticated
 
 ### Containers
-- [ ] `docker compose run --rm automata-ml python3 -c "import torch; print(torch.cuda.is_available())"` → `True`
-- [ ] `docker compose run --rm automata-base bash -lc "python3 -c 'import rclpy; import mujoco; print(\"both work\")'"` succeeds
-- [ ] `docker compose run --rm automata-base bash -lc "echo \$VIRTUAL_ENV"` → `/opt/venv`
+- [ ] `docker compose run --rm helix-ml python3 -c "import torch; print(torch.cuda.is_available())"` → `True`
+- [ ] `docker compose run --rm helix-base bash -lc "python3 -c 'import rclpy; import mujoco; print(\"both work\")'"` succeeds
+- [ ] `docker compose run --rm helix-base bash -lc "echo \$VIRTUAL_ENV"` → `/opt/venv`
 - [ ] Both images visible on GHCR
 
 ### Ansible idempotency
 - [ ] Second run of `make ansible-workstation` shows `changed=0, failed=0`
 
 ### ROS2
-- [ ] `make dev` starts `automata-dev` container
+- [ ] `make dev` starts `helix-dev` container
 - [ ] `make build-ros2` completes without manual patching
-- [ ] Inside `automata-dev`: `ros2 run learning_nodes joint_publisher` works
+- [ ] Inside `helix-dev`: `ros2 run learning_nodes joint_publisher` works
 - [ ] In second terminal inside same container: `ros2 topic hz /joint_states` → ~50Hz
 
 ### Rust
@@ -110,7 +110,7 @@ Run these in order — each depends on the previous passing.
 ### Go
 - [ ] `go run shared/telemetry_server/main.go` starts on `:50051` and `:9090`
 - [ ] `curl localhost:9090/metrics | grep telemetry_messages_total` returns the metric
-- [ ] `docker compose run --rm automata-base python3 /workspace/shared/telemetry_server/test_client.py` passes
+- [ ] `docker compose run --rm helix-base python3 /workspace/shared/telemetry_server/test_client.py` passes
 
 ### IaC
 - [ ] `make -C infra tf-plan` runs without errors

@@ -3,7 +3,7 @@
 MuJoCo-ROS2 bridge.
 Steps a 6-DOF MuJoCo arm simulation at 50Hz and publishes
 joint states to /joint_states via ROS2.
-Run with: docker compose run --rm automata-base python3\
+Run with: docker compose run --rm helix-base python3\
            projects/phase1_foundations/mujoco_bridge.py
 """
 
