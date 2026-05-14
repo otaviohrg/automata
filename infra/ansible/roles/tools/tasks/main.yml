@@ -1,0 +1,10 @@
+- name: Install kubectl, helm, k9s, terraform, ansible
+  become: yes
+  kewlfft.aur.aur:
+    name:
+      - kubectl
+      - helm
+      - k9s
+      - terraform
+      - ansible
+    state: present

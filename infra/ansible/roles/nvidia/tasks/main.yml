@@ -1,0 +1,23 @@
+- name: Install Nvidia driver and utils
+  become: yes
+  community.general.pacman:
+    name:
+      - nvidia-open-dkms
+      - nvidia-utils
+      - nvidia-settings
+    state: present
+
+- name: Install CUDA toolkit
+  become: yes
+  kewlfft.aur.aur:
+    name: cuda
+    state: present
+
+- name: Configure CUDA environment in .zshrc
+  blockinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
+    marker: "# {mark} CUDA ENVIRONMENT"
+    block: |
+      export CUDA_HOME=/opt/cuda
+      export PATH=$CUDA_HOME/bin:$PATH
+      export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH

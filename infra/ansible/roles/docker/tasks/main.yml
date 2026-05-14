@@ -1,0 +1,44 @@
+- name: Install Docker and docker-compose
+  become: yes
+  community.general.pacman:
+    name:
+      - docker
+      - docker-compose
+      - docker-buildx
+    state: present
+
+- name: Enable and start Docker
+  become: yes
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Add user to docker group
+  become: yes
+  user:
+    name: "{{ ansible_facts['user_id'] }}"
+    groups: docker
+    append: yes
+
+- name: Install nvidia-container-toolkit
+  become: yes
+  kewlfft.aur.aur:
+    name: nvidia-container-toolkit
+    state: present
+  register: nct_install
+
+- name: Restart Docker after nvidia-container-toolkit
+  become: yes
+  systemd:
+    name: docker
+    state: restarted
+  when: nct_install.changed
+
+- name: Verify GPU accessible inside container
+  command: >
+    docker run --rm --gpus all
+    nvidia/cuda:12.1.0-base-ubuntu22.04 nvidia-smi
+  register: gpu_check
+  changed_when: false
+  failed_when: gpu_check.rc != 0
