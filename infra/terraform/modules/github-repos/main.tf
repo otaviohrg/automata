@@ -52,11 +52,13 @@ resource "github_branch_protection" "main" {
   required_status_checks {
     strict = true
     contexts = [
-      "CI — container images",
-      "CI — Rust firmware",
-      "CI — Go telemetry server",
-      "CI — Python projects",
-      "CI — IaC validation",
+      "CI - container images",
+      "CI - ROS2 packages",
+      "CI - Rust firmware",
+      "CI - Go telemetry server",
+      "CI - Python projects",
+      "CI - IaC validation / terraform",
+      "CI - IaC validation / ansible-lint",
     ]
   }
 
