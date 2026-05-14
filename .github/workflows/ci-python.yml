@@ -9,6 +9,7 @@ on:
     paths:
       - 'projects/**'
       - 'shared/**/*.py'
+  workflow_call:
 
 jobs:
   lint-and-test:
