@@ -12,6 +12,11 @@ variable "tailscale_auth_key" {
   sensitive = true
 }
 
+variable "ansible_vault_password" {
+  type      = string
+  sensitive = true
+}
+
 variable "ghcr_user" {
   type      = string
   sensitive = false
@@ -25,7 +30,6 @@ variable "tailscale_oauth_client_id" {
 variable "tailscale_oauth_client_secret" {
   type      = string
   sensitive = true
-
 }
 
 variable "tailnet" {
@@ -35,10 +39,11 @@ variable "tailnet" {
 module "github_repos" {
   source = "../../modules/github-repos"
 
-  github_token       = var.github_token
-  repo_name          = "automata"
-  tailscale_auth_key = var.tailscale_auth_key
-  ghcr_user          = var.ghcr_user
+  github_token           = var.github_token
+  repo_name              = "automata"
+  tailscale_auth_key     = var.tailscale_auth_key
+  ansible_vault_password = var.ansible_vault_password
+  ghcr_user              = var.ghcr_user
 }
 
 module "tailscale_acl" {

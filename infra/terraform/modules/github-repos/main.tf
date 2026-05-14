@@ -27,6 +27,11 @@ variable "ghcr_user" {
   sensitive = false
 }
 
+variable "ansible_vault_password" {
+  type      = string
+  sensitive = true
+}
+
 provider "github" {
   token = var.github_token
 }
@@ -73,6 +78,12 @@ resource "github_actions_secret" "tailscale_auth_key" {
   repository  = github_repository.automata.name
   secret_name = "TAILSCALE_AUTH_KEY"
   value       = var.tailscale_auth_key
+}
+
+resource "github_actions_secret" "ansible_vault_password" {
+  repository  = github_repository.automata.name
+  secret_name = "ANSIBLE_VAULT_PASSWORD"
+  value       = var.ansible_vault_password
 }
 
 resource "github_actions_variable" "ghcr_user" {
