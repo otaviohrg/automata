@@ -1,0 +1,16 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# Google Test — used by all C++ library tests
+http_archive(
+    name = "googletest",
+    urls = ["https://github.com/google/googletest/archive/v1.14.0.tar.gz"],
+    strip_prefix = "googletest-1.14.0",
+    sha256 = "8ad598c73ad796e0d8280b082cebd82a630d73e73cd3c70057938a6501bba5d7",
+)
+
+# pybind11 — used for Python bindings of C++ libraries
+http_archive(
+    name = "pybind11_bazel",
+    urls = ["https://github.com/pybind/pybind11_bazel/archive/v2.11.1.tar.gz"],
+    strip_prefix = "pybind11_bazel-2.11.1",
+)
