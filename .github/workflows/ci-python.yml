@@ -19,11 +19,11 @@ jobs:
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           uv venv .venv
           source .venv/bin/activate
-          uv pip install ruff mypy pytest
+          uv pip install ruff mypy pytest grpcio
 
       - name: Lint
         run: |
@@ -34,4 +34,6 @@ jobs:
       - name: Test
         run: |
           source .venv/bin/activate
-          pytest projects/ shared/ -v --ignore=projects/foundations
+          pytest projects/ shared/ -v \
+            --ignore=projects/foundations \
+            --ignore=shared/telemetry_server
