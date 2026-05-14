@@ -42,4 +42,6 @@ jobs:
             --base-paths ros2_ws/src \
             --install-base /ros2_ws/install \
             --build-base /tmp/colcon_build
-          colcon test-result --verbose
+          colcon test-result \
+            --test-result-base /tmp/colcon_build \
+            --verbose
