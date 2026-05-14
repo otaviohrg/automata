@@ -1,0 +1,37 @@
+name: CI — Python projects
+on:
+  push:
+    paths:
+      - 'projects/**'
+      - 'shared/**/*.py'
+      - '.github/workflows/ci-python.yml'
+  pull_request:
+    paths:
+      - 'projects/**'
+      - 'shared/**/*.py'
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install dependencies
+        run: |
+          uv venv .venv
+          source .venv/bin/activate
+          uv pip install ruff mypy pytest
+
+      - name: Lint
+        run: |
+          source .venv/bin/activate
+          ruff check projects/ shared/
+          ruff format --check projects/ shared/
+
+      - name: Test
+        run: |
+          source .venv/bin/activate
+          pytest projects/ shared/ -v --ignore=projects/foundations

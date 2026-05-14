@@ -1,0 +1,39 @@
+name: CI — ROS2 packages
+on:
+  push:
+    paths:
+      - 'ros2_ws/**'
+      - '.github/workflows/ci-ros2.yml'
+  pull_request:
+    paths:
+      - 'ros2_ws/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/automata-base:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build ROS2 workspace
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          colcon build \
+            --base-paths ros2_ws/src \
+            --install-base /ros2_ws/install \
+            --build-base /tmp/colcon_build \
+            --cmake-args -DCMAKE_BUILD_TYPE=Release
+
+      - name: Run tests
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          source /ros2_ws/install/setup.bash
+          colcon test \
+            --base-paths ros2_ws/src \
+            --install-base /ros2_ws/install \
+            --build-base /tmp/colcon_build
+          colcon test-result --verbose

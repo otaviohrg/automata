@@ -1,0 +1,41 @@
+name: CI — IaC validation
+on:
+  push:
+    paths:
+      - 'infra/**'
+      - '.github/workflows/ci-iac.yml'
+  pull_request:
+    paths:
+      - 'infra/**'
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.7"
+
+      - name: Terraform fmt
+        run: terraform fmt -check -recursive infra/terraform/
+
+      - name: Terraform validate
+        run: |
+          cd infra/terraform/environments/prod
+          terraform init -backend=false
+          terraform validate
+
+  ansible-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Ansible and ansible-lint
+        run: pip install ansible ansible-lint
+
+      - name: Run ansible-lint
+        run: |
+          cd infra/ansible
+          ansible-lint playbooks/

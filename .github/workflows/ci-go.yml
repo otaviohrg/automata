@@ -1,0 +1,35 @@
+name: CI — Go telemetry server
+on:
+  push:
+    paths:
+      - 'shared/telemetry_server/**'
+      - '.github/workflows/ci-go.yml'
+  pull_request:
+    paths:
+      - 'shared/telemetry_server/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: shared/telemetry_server
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: shared/telemetry_server/go.mod
+          cache-dependency-path: shared/telemetry_server/go.sum
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test -race -coverprofile=coverage.out ./...
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: shared/telemetry_server/coverage.out
