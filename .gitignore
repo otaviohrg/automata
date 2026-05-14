@@ -68,3 +68,8 @@ log/
 .devcontainer/.env
 shared/telemetry_server/proto/*.pb.go
 shared/telemetry_server/proto/*_pb2*.py
+infra/terraform/*.tfstate
+infra/terraform/*.tfstate.backup
+infra/terraform/.terraform/
+infra/terraform/.terraform.lock.hcl
+infra/terraform/terraform.tfvars
