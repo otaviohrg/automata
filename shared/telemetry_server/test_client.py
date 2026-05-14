@@ -48,8 +48,7 @@ def run():
     print(f"    received {len(alerts)} anomaly alerts:")
     for alert in alerts:
         print(
-            f"{alert.joint_name}: score={alert.anomaly_score:.2f}"
-            f"fault={alert.is_fault}"
+            f"{alert.joint_name}: score={alert.anomaly_score:.2f}fault={alert.is_fault}"
         )
 
     print("\nAll tests passed.")
