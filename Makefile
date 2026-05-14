@@ -28,7 +28,7 @@ telemetry:
 	$(MAKE) -C shared/telemetry_server run
 
 build-ros2:
-	docker exec -it helix-helix-dev-1 \
+	docker exec -it helix-core-helix-dev-1 \
 	  bash /workspace/scripts/build_ros2.sh
 
 lint:
