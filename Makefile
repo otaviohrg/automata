@@ -1,7 +1,7 @@
 GHCR_USER ?= $(shell echo $$GHCR_USER)
 REGISTRY  = ghcr.io/$(GHCR_USER)
 
-.PHONY: build push dev down setup ansible-workstation telemetry build-ros2
+.PHONY: build push dev down setup telemetry build-ros2
 
 build:
 	docker compose build automata-base
@@ -19,12 +19,10 @@ dev:
 down:
 	docker compose down
 
-# Provisions the workstation and then builds containers
-setup: ansible-workstation build
-
-ansible-workstation:
-	cd infra/ansible && \
-	ansible-playbook playbooks/workstation.yml --ask-become-pass
+# Delegates to infra/Makefile then builds containers
+setup:
+	$(MAKE) -C infra ansible-workstation
+	$(MAKE) build
 
 telemetry:
 	$(MAKE) -C shared/telemetry_server run
