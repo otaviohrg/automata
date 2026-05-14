@@ -37,6 +37,9 @@ jobs:
   ci-containers:
     needs: filter
     if: needs.filter.outputs.containers == 'true'
+    permissions:
+      contents: read
+      packages: write
     uses: ./.github/workflows/ci-containers.yml
 
   ci-ros2:
