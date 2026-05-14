@@ -1,17 +1,17 @@
 - name: Install rustup
-  shell: |
+  ansible.builtin.shell: |
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
   args:
     creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/rustc"
 
 - name: Add cargo to PATH in .zshrc
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
     line: 'export PATH="$HOME/.cargo/bin:$PATH"'
-    create: yes
+    create: true
 
 - name: Install espup for ESP32 targets
-  shell: |
+  ansible.builtin.shell: |
     source $HOME/.cargo/env
     cargo install espup
     espup install
@@ -21,13 +21,13 @@
     PATH: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin:{{ ansible_facts['env']['PATH'] }}"
 
 - name: Source ESP32 environment in .zshrc
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
     line: 'source ~/export-esp.sh'
-    create: yes
+    create: true
 
 - name: Install cargo-espflash
-  shell: |
+  ansible.builtin.shell: |
     source $HOME/.cargo/env
     cargo install cargo-espflash espflash
   args:
@@ -36,7 +36,7 @@
     PATH: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin:{{ ansible_facts['env']['PATH'] }}"
 
 - name: Install Rust components
-  shell: |
+  ansible.builtin.shell: |
     source $HOME/.cargo/env
     rustup component add clippy rustfmt rust-analyzer
   environment:
@@ -44,13 +44,13 @@
   changed_when: false
 
 - name: Install uv via official installer
-  shell: |
+  ansible.builtin.shell: |
     curl -LsSf https://astral.sh/uv/install.sh | sh
   args:
     creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/uv"
 
 - name: Add uv to PATH in .zshrc
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
     line: 'export PATH="$HOME/.local/bin:$PATH"'
-    create: yes
+    create: true

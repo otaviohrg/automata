@@ -1,0 +1,7 @@
+profile: min
+warn_list: []
+mock_modules:
+  - community.general.pacman
+  - kewlfft.aur.aur
+exclude_paths:
+  - infra/ansible/vault/

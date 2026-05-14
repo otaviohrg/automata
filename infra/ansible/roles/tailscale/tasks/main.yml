@@ -1,23 +1,23 @@
 - name: Install Tailscale
-  become: yes
+  become: true
   community.general.pacman:
     name: tailscale
     state: present
 
 - name: Enable and start tailscaled
-  become: yes
-  systemd:
+  become: true
+  ansible.builtin.systemd:
     name: tailscaled
-    enabled: yes
+    enabled: true
     state: started
 
 - name: Check if already authenticated
-  command: tailscale status
+  ansible.builtin.command: tailscale status
   register: ts_status
   changed_when: false
   failed_when: false
 
 - name: Authenticate Tailscale
-  become: yes
-  command: "tailscale up --authkey={{ tailscale_auth_key }} --advertise-tags=tag:workstation"
+  become: true
+  ansible.builtin.command: "tailscale up --authkey={{ tailscale_auth_key }} --advertise-tags=tag:workstation"
   when: "'Logged out' in ts_status.stdout or ts_status.rc != 0"

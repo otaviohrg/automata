@@ -13,8 +13,10 @@ from sensor_msgs.msg import JointState
 import mujoco
 import mujoco.viewer
 import numpy as np
-#import threading
+
+# import threading
 import pathlib
+
 
 def _load_model(model_path) -> mujoco.MjModel:
     if not model_path.exists():
@@ -24,9 +26,9 @@ def _load_model(model_path) -> mujoco.MjModel:
         )
     return mujoco.MjModel.from_xml_path(str(model_path))
 
+
 _MODEL_PATH = pathlib.Path(__file__).parent / "models" / "arm_6dof.xml"
-JOINT_NAMES = ["joint1", "joint2", "joint3",
-               "joint4", "joint5", "joint6"]
+JOINT_NAMES = ["joint1", "joint2", "joint3", "joint4", "joint5", "joint6"]
 
 
 class MuJoCoROS2Bridge(Node):
@@ -39,18 +41,16 @@ class MuJoCoROS2Bridge(Node):
         self.pub = self.create_publisher(JointState, "joint_states", 10)
         self.timer = self.create_timer(0.02, self.step_and_publish)
 
-        self.get_logger().info(
-            "MuJoCo-ROS2 bridge running at 50Hz"
-        )
-    
+        self.get_logger().info("MuJoCo-ROS2 bridge running at 50Hz")
+
     def step_and_publish(self):
         for i in range(self.model.nu):
             phase = i * np.pi / 3.0
             self.data.ctrl[i] = np.sin(self.t + phase) * 0.5
-        
+
         for _ in range(10):
             mujoco.mj_step(self.model, self.data)
-        
+
         msg = JointState()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = "base_link"
@@ -61,6 +61,7 @@ class MuJoCoROS2Bridge(Node):
 
         self.pub.publish(msg)
         self.t += 0.02
+
 
 def main():
     model = _load_model(_MODEL_PATH)
@@ -78,5 +79,5 @@ def main():
         rclpy.shutdown()
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()

@@ -1,0 +1,76 @@
+repos:
+  # Python — ruff covers both linting and formatting
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  # Python type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.9.0
+    hooks:
+      - id: mypy
+        files: ^projects/
+        exclude: ^shared/
+
+  # Go — local hooks to handle nested module
+  - repo: local
+    hooks:
+      - id: go-fmt
+        name: go fmt
+        entry: bash -c 'cd shared/telemetry_server && go fmt ./...'
+        language: system
+        files: \.go$
+        pass_filenames: false
+      - id: go-vet
+        name: go vet
+        entry: bash -c 'cd shared/telemetry_server && go vet ./...'
+        language: system
+        files: \.go$
+        pass_filenames: false
+
+  # Rust
+  - repo: local
+    hooks:
+      - id: cargo-fmt
+        name: cargo fmt
+        entry: cargo fmt --manifest-path shared/firmware/Cargo.toml --all
+        language: system
+        files: \.rs$
+        pass_filenames: false
+      - id: cargo-clippy
+        name: cargo clippy
+        entry: cargo clippy --manifest-path shared/firmware/Cargo.toml -- -D warnings
+        language: system
+        files: \.rs$
+        pass_filenames: false
+
+  # Terraform
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.89.0
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_validate
+
+  # Ansible
+  - repo: local
+    hooks:
+      - id: ansible-lint
+        name: ansible-lint
+        entry: bash -c 'cd infra/ansible && ANSIBLE_VAULT_PASSWORD_FILE=~/.ansible_vault_pass ansible-lint playbooks/'
+        language: system
+        files: ^infra/ansible/
+        pass_filenames: false
+
+  # General
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=500]

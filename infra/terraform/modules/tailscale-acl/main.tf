@@ -18,7 +18,7 @@ variable "tailscale_oauth_client_secret" {
 }
 
 variable "tailnet" {
-  type = string
+  type        = string
   description = "Your tailnet name, e.g. your-tailnet.ts.net"
 }
 
@@ -31,42 +31,42 @@ provider "tailscale" {
 resource "tailscale_acl" "name" {
   acl = jsonencode(
     {
-        tagOwners = {
-            "tag:monitoring"    = [],
-            "tag:robot"         = [],
-            "tag:workstation"   = [],
-        }
+      tagOwners = {
+        "tag:monitoring"  = [],
+        "tag:robot"       = [],
+        "tag:workstation" = [],
+      }
 
-        acls = [
-            {
-                action  = "accept"
-                src     = ["tag:workstation"]
-                dst     = ["*:*"]
-            },
-            {
-                action  = "accept"
-                src     = ["tag:robot"]
-                dst     = ["tag:monitoring:50051"]
-            },
-            {
-                action  = "accept"
-                src     = ["tag:monitoring"]
-                dst     = ["tag:robot:9090"]
-            },
-        ]
+      acls = [
+        {
+          action = "accept"
+          src    = ["tag:workstation"]
+          dst    = ["*:*"]
+        },
+        {
+          action = "accept"
+          src    = ["tag:robot"]
+          dst    = ["tag:monitoring:50051"]
+        },
+        {
+          action = "accept"
+          src    = ["tag:monitoring"]
+          dst    = ["tag:robot:9090"]
+        },
+      ]
 
-        ssh = [
-            {
-                action  = "accept"
-                src     = ["tag:workstation"]
-                dst     = ["tag:monitoring", "tag:robot"]
-                users   = ["autogroup:nonroot"]
-            },
-        ]
+      ssh = [
+        {
+          action = "accept"
+          src    = ["tag:workstation"]
+          dst    = ["tag:monitoring", "tag:robot"]
+          users  = ["autogroup:nonroot"]
+        },
+      ]
     }
   )
 }
 
 resource "tailscale_dns_nameservers" "automata" {
-    nameservers = ["100.100.100.100", "1.1.1.1"]
+  nameservers = ["100.100.100.100", "1.1.1.1"]
 }

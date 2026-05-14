@@ -9,10 +9,10 @@ import (
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
-    "github.com/prometheus/client_golang/prometheus/promauto"
-    "github.com/prometheus/client_golang/prometheus/promhttp"
-    "google.golang.org/grpc"
-    pb "telemetry_server/proto"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"google.golang.org/grpc"
+	pb "telemetry_server/proto"
 )
 
 var (
@@ -55,13 +55,13 @@ func (s *server) PublishJointData(ctx context.Context, req *pb.JointTelemetry) (
 	for i, name := range req.JointNames {
 		if i < len(req.Positions) {
 			jointPosition.
-			WithLabelValues(req.RobotId, name).
-			Set(req.Positions[i])
+				WithLabelValues(req.RobotId, name).
+				Set(req.Positions[i])
 		}
 		if i < len(req.Velocities) {
 			jointVelocity.
-			WithLabelValues(req.RobotId, name).
-			Set(req.Velocities[i])
+				WithLabelValues(req.RobotId, name).
+				Set(req.Velocities[i])
 		}
 	}
 
@@ -80,18 +80,18 @@ func (s *server) StreamAlerts(req *pb.JointTelemetry, stream pb.TelemetryService
 		if score > 0.7 {
 			anomaliesTotal.WithLabelValues(req.RobotId, name).Inc()
 			alert := &pb.AnomalyAlert{
-				RobotId:		req.RobotId,
-				Timestamp:		float64(time.Now().UnixMilli()) / 1000.0,
-				JointName:		name,
-				AnomalyScore:	score,
-				IsFault:		score > 0.9,
+				RobotId:      req.RobotId,
+				Timestamp:    float64(time.Now().UnixMilli()) / 1000.0,
+				JointName:    name,
+				AnomalyScore: score,
+				IsFault:      score > 0.9,
 			}
 			if err := stream.Send(alert); err != nil {
 				return err
 			}
 		}
 	}
-	return nil;
+	return nil
 }
 
 func main() {
@@ -116,4 +116,3 @@ func main() {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
-

@@ -41,4 +41,3 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     timm
 
 WORKDIR /workspace
-

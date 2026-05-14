@@ -1,23 +1,23 @@
 - name: Install Go
-  become: yes
+  become: true
   community.general.pacman:
     name: go
     state: present
 
 - name: Install protobuf tools
-  become: yes
+  become: true
   community.general.pacman:
     name: protobuf
     state: present
 
 - name: Add Go bin to PATH in .zshrc
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
     line: 'export PATH=$PATH:$(go env GOPATH)/bin'
-    create: yes
+    create: true
 
 - name: Install Go gRPC protoc plugins
-  shell: |
+  ansible.builtin.shell: |
     go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
     go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
   environment:

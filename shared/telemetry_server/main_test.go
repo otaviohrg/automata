@@ -25,12 +25,12 @@ func (m *mockStream) Send(alert *pb.AnomalyAlert) error {
 func TestPublishJointData_returnSuccess(t *testing.T) {
 	s := &server{}
 	req := &pb.JointTelemetry{
-		RobotId:	"robot_success",
-		Timestamp:	float64(time.Now().UnixMilli()) / 1000.0,
-		JointNames:	[]string{"joint1", "joint2"},
-		Positions:	[]float64{1.0, 2.0},
-		Velocities:	[]float64{0.1, 0.2},
-		Efforts:	[]float64{0.0, 0.0},
+		RobotId:    "robot_success",
+		Timestamp:  float64(time.Now().UnixMilli()) / 1000.0,
+		JointNames: []string{"joint1", "joint2"},
+		Positions:  []float64{1.0, 2.0},
+		Velocities: []float64{0.1, 0.2},
+		Efforts:    []float64{0.0, 0.0},
 	}
 
 	ack, err := s.PublishJointData(context.Background(), req)
@@ -38,7 +38,6 @@ func TestPublishJointData_returnSuccess(t *testing.T) {
 	require.NoError(t, err)
 	assert.True(t, ack.Success)
 }
-
 
 func TestPublishJointData_incrementsMessageCounter(t *testing.T) {
 	s := &server{}
@@ -72,13 +71,13 @@ func TestPublishJointData_recordsJointPosition(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(
-		t, 
-		1.57, 
+		t,
+		1.57,
 		testutil.ToFloat64(jointPosition.WithLabelValues("robot_position", "joint1")),
 	)
 	assert.Equal(
-		t, 
-		3.14, 
+		t,
+		3.14,
 		testutil.ToFloat64(jointPosition.WithLabelValues("robot_position", "joint2")),
 	)
 }
@@ -96,8 +95,8 @@ func TestPublishJointData_recordsJointVelocity(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(
-		t, 
-		2.5, 
+		t,
+		2.5,
 		testutil.ToFloat64(jointVelocity.WithLabelValues("robot_velocity", "joint1")),
 	)
 }
@@ -112,12 +111,12 @@ func TestPublishJointData_handlesMoreJointsThanPositions(t *testing.T) {
 	}
 
 	ack, err := s.PublishJointData(context.Background(), req)
-	
+
 	require.NoError(t, err)
 	assert.True(t, ack.Success)
 	assert.Equal(
-		t, 
-		1.0, 
+		t,
+		1.0,
 		testutil.ToFloat64(jointPosition.WithLabelValues("robot_mismatch", "joint1")),
 	)
 }

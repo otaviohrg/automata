@@ -1,5 +1,5 @@
 - name: Install Nvidia driver and utils
-  become: yes
+  become: true
   community.general.pacman:
     name:
       - nvidia-open-dkms
@@ -8,13 +8,13 @@
     state: present
 
 - name: Install CUDA toolkit
-  become: yes
+  become: true
   kewlfft.aur.aur:
     name: cuda
     state: present
 
 - name: Configure CUDA environment in .zshrc
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
     marker: "# {mark} CUDA ENVIRONMENT"
     block: |
