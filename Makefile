@@ -30,3 +30,6 @@ telemetry:
 build-ros2:
 	docker exec -it automata-automata-dev-1 \
 	  bash /workspace/scripts/build_ros2.sh
+
+lint:
+	pre-commit run --all-files
