@@ -79,8 +79,20 @@ jobs:
     steps:
       - name: Check all jobs passed or were skipped
         run: |
-          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
-            echo "One or more CI jobs failed"
-            exit 1
-          fi
+          echo '${{ toJSON(needs) }}'
+
+          for result in \
+            "${{ needs.ci-containers.result }}" \
+            "${{ needs.ci-ros2.result }}" \
+            "${{ needs.ci-rust.result }}" \
+            "${{ needs.ci-go.result }}" \
+            "${{ needs.ci-python.result }}" \
+            "${{ needs.ci-iac.result }}"
+          do
+            if [[ "$result" != "success" && "$result" != "skipped" ]]; then
+              echo "A required CI job ended with status: $result"
+              exit 1
+            fi
+          done
+
           echo "All relevant CI jobs passed or were skipped"
