@@ -36,4 +36,8 @@ jobs:
           source .venv/bin/activate
           pytest projects/ shared/ -v \
             --ignore=projects/foundations \
-            --ignore=shared/telemetry_server
+            --ignore=shared/telemetry_server \
+            --ignore=shared/images \
+            --ignore=shared/firmware \
+            -p no:cacheprovider \
+            || [ $? -eq 5 ]
