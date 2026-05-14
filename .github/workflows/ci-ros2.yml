@@ -7,6 +7,7 @@ on:
   pull_request:
     paths:
       - 'ros2_ws/**'
+  workflow_call:
 
 jobs:
   build-and-test:

@@ -2,11 +2,16 @@ package main
 
 import (
 	"context"
-	"log"
+	"log/slog"
 	"math"
 	"net"
 	"net/http"
+	"os"
 	"time"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -45,11 +50,23 @@ var (
 	)
 )
 
+var tracer = otel.Tracer("telemetry-server")
+
 type server struct {
 	pb.UnimplementedTelemetryServiceServer
 }
 
 func (s *server) PublishJointData(ctx context.Context, req *pb.JointTelemetry) (*pb.Ack, error) {
+	ctx, span := tracer.Start(
+		ctx,
+		"PublishJointData",
+		trace.WithAttributes(
+			attribute.String("robot_id", req.RobotId),
+			attribute.Int("joint_count", len(req.JointNames)),
+		),
+	)
+	defer span.End()
+
 	messagesTotal.WithLabelValues(req.RobotId).Inc()
 
 	for i, name := range req.JointNames {
@@ -65,8 +82,12 @@ func (s *server) PublishJointData(ctx context.Context, req *pb.JointTelemetry) (
 		}
 	}
 
-	log.Printf("[%s] received %d joints at t=%.3f", req.RobotId, len(req.JointNames), req.Timestamp)
-
+	slog.Info(
+		"joint telemetry received",
+		"robot_id", req.RobotId,
+		"joint_count", len(req.JointNames),
+		"timestamp", req.Timestamp,
+	)
 	return &pb.Ack{Success: true}, nil
 }
 
@@ -95,24 +116,34 @@ func (s *server) StreamAlerts(req *pb.JointTelemetry, stream pb.TelemetryService
 }
 
 func main() {
+	logger := slog.New(slog.NewJSONHandler(
+		os.Stdout,
+		&slog.HandlerOptions{
+			Level: slog.LevelInfo,
+		}))
+	slog.SetDefault(logger)
+
 	go func() {
 		http.Handle("/metrics", promhttp.Handler())
-		log.Println("metrics server listening on :9090")
+		slog.Info("metrics server listening", "addr", ":9090")
 		if err := http.ListenAndServe(":9090", nil); err != nil {
-			log.Fatalf("metrics server failer: %v", err)
+			slog.Error("metrics server failer", "error", err)
+			os.Exit(1)
 		}
 	}()
 
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		slog.Error("failed to listen", "error", err)
+		os.Exit(1)
 	}
 
 	s := grpc.NewServer()
 	pb.RegisterTelemetryServiceServer(s, &server{})
 
-	log.Println("telemetry gRPC server listening on :50051")
+	slog.Info("telemetry gRPC server listening", "addr", ":50051")
 	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		slog.Error("failed to serve", "error", err)
+		os.Exit(1)
 	}
 }

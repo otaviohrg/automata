@@ -7,6 +7,7 @@ on:
   pull_request:
     paths:
       - 'infra/**'
+  workflow_call:
 
 jobs:
   terraform:
@@ -41,7 +42,7 @@ jobs:
           ansible-galaxy collection install kewlfft.aur
 
       - name: Create vault password file
-        run: echo "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > ~/.ansible_vault_pass
+        run: printf '%s' "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > ~/.ansible_vault_pass
 
       - name: Verify vault password file exists
         run: ls -la ~/.ansible_vault_pass

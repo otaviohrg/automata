@@ -1,0 +1,98 @@
+name: CI Gate
+on:
+  pull_request:
+
+jobs:
+  filter:
+    runs-on: ubuntu-latest
+    outputs:
+      containers: ${{ steps.filter.outputs.containers }}
+      ros2: ${{ steps.filter.outputs.ros2 }}
+      rust: ${{ steps.filter.outputs.rust }}
+      go: ${{ steps.filter.outputs.go }}
+      python: ${{ steps.filter.outputs.python }}
+      iac: ${{ steps.filter.outputs.iac }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            containers:
+              - 'shared/images/**'
+            ros2:
+              - 'ros2_ws/**'
+            rust:
+              - 'shared/firmware/**'
+            go:
+              - 'shared/telemetry_server/**'
+            python:
+              - 'projects/**'
+              - 'shared/**/*.py'
+            iac:
+              - 'infra/**'
+
+  ci-containers:
+    needs: filter
+    if: needs.filter.outputs.containers == 'true'
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/ci-containers.yml
+    secrets: inherit
+
+  ci-ros2:
+    needs: filter
+    if: needs.filter.outputs.ros2 == 'true'
+    uses: ./.github/workflows/ci-ros2.yml
+    secrets: inherit
+
+  ci-rust:
+    needs: filter
+    if: needs.filter.outputs.rust == 'true'
+    uses: ./.github/workflows/ci-rust.yml
+    secrets: inherit
+
+  ci-go:
+    needs: filter
+    if: needs.filter.outputs.go == 'true'
+    uses: ./.github/workflows/ci-go.yml
+    secrets: inherit
+
+  ci-python:
+    needs: filter
+    if: needs.filter.outputs.python == 'true'
+    uses: ./.github/workflows/ci-python.yml
+    secrets: inherit
+
+  ci-iac:
+    needs: filter
+    if: needs.filter.outputs.iac == 'true'
+    uses: ./.github/workflows/ci-iac.yml
+    secrets: inherit
+
+  # Always runs — this is the only required check in branch protection
+  all-checks-passed:
+    runs-on: ubuntu-latest
+    needs: [ci-containers, ci-ros2, ci-rust, ci-go, ci-python, ci-iac]
+    if: always()
+    steps:
+      - name: Check all jobs passed or were skipped
+        run: |
+          echo '${{ toJSON(needs) }}'
+
+          for result in \
+            "${{ needs.ci-containers.result }}" \
+            "${{ needs.ci-ros2.result }}" \
+            "${{ needs.ci-rust.result }}" \
+            "${{ needs.ci-go.result }}" \
+            "${{ needs.ci-python.result }}" \
+            "${{ needs.ci-iac.result }}"
+          do
+            if [[ "$result" != "success" && "$result" != "skipped" ]]; then
+              echo "A required CI job ended with status: $result"
+              exit 1
+            fi
+          done
+
+          echo "All relevant CI jobs passed or were skipped"
