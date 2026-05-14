@@ -1,4 +1,4 @@
-name: CI — IaC validation
+name: CI - IaC validation
 on:
   push:
     paths:

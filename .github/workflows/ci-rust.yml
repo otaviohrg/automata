@@ -1,4 +1,4 @@
-name: CI — Rust firmware
+name: CI- Rust firmware
 on:
   push:
     paths:

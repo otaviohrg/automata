@@ -1,4 +1,4 @@
-name: CI — ROS2 packages
+name: CI - ROS2 packages
 on:
   push:
     paths:
@@ -11,6 +11,9 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     container:
       image: ghcr.io/${{ github.repository_owner }}/automata-base:latest
       credentials:

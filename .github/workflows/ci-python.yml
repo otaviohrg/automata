@@ -1,4 +1,4 @@
-name: CI — Python projects
+name: CI - Python projects
 on:
   push:
     paths:

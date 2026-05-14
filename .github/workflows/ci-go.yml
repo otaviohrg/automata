@@ -1,4 +1,4 @@
-name: CI — Go telemetry server
+name: CI - Go telemetry server
 on:
   push:
     paths:

@@ -1,4 +1,4 @@
-name: CI — container images
+name: CI - container images
 on:
   push:
     paths:
@@ -11,6 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
 
