@@ -28,8 +28,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install ansible-lint
+      - name: Install Ansible and ansible-lint
         run: pip install ansible ansible-lint
+      - name: Install Ansible collections
+        run: |
+          ansible-galaxy collection install community.general
+          ansible-galaxy collection install kewlfft.aur
+      - name: Create vault password file
+        run: printf '%s' "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > ~/.ansible_vault_pass
       - name: Run ansible-lint
         run: |
           cd infra/ansible
