@@ -1,0 +1,24 @@
+[project]
+name = "helix-sdk"
+version = "0.1.0"
+description = "Shared utilities for the helix portfolio"
+requires-python = ">=3.10"
+dependencies = [
+    "grpcio>=1.60.0",
+    "protobuf>=4.25.0",
+    "pyyaml>=6.0.0",
+    "numpy>=1.26.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/helix"]
+
+[project.urls]
+Repository = "https://github.com/otaviohrg/helix-core"
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff", "mypy"]

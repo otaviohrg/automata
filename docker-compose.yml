@@ -1,8 +1,8 @@
 services:
-  automata-base:
-    image: automata-base:latest
+  helix-base:
+    image: helix-base:latest
     build:
-      context: ./shared/images/automata-base
+      context: ./shared/images/helix-base
     runtime: nvidia
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
@@ -18,10 +18,10 @@ services:
     stdin_open: true
     tty: true
 
-  automata-ml:
-    image: automata-ml:latest
+  helix-ml:
+    image: helix-ml:latest
     build:
-      context: ./shared/images/automata-ml
+      context: ./shared/images/helix-ml
     runtime: nvidia
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
@@ -35,8 +35,8 @@ services:
     stdin_open: true
     tty: true
 
-  automata-dev:
-    image: automata-base:latest
+  helix-dev:
+    image: helix-base:latest
     runtime: nvidia
     environment:
       - NVIDIA_VISIBLE_DEVICES=all

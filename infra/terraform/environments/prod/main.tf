@@ -40,7 +40,7 @@ module "github_repos" {
   source = "../../modules/github-repos"
 
   github_token           = var.github_token
-  repo_name              = "automata"
+  repo_name              = "helix"
   tailscale_auth_key     = var.tailscale_auth_key
   ansible_vault_password = var.ansible_vault_password
   ghcr_user              = var.ghcr_user

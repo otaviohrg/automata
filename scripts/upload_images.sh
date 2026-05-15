@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# update-images.sh — rebuild and push automata images to GHCR
+# update-images.sh — rebuild and push helix images to GHCR
 # Only rebuilds images whose Dockerfile or context has changed since last push.
 #
 # Usage:
@@ -21,11 +21,11 @@ set -euo pipefail
 GHCR_USER="${GHCR_USER:?GHCR_USER environment variable is not set. Add it to your shell config.}"
 REGISTRY="ghcr.io/${GHCR_USER}"
 
-BASE_IMAGE="${REGISTRY}/automata-base"
-ML_IMAGE="${REGISTRY}/automata-ml"
+BASE_IMAGE="${REGISTRY}/helix-base"
+ML_IMAGE="${REGISTRY}/helix-ml"
 
-BASE_CONTEXT="shared/images/automata-base"
-ML_CONTEXT="shared/images/automata-ml"
+BASE_CONTEXT="shared/images/helix-base"
+ML_CONTEXT="shared/images/helix-ml"
 
 # Tag format: latest + a dated tag for rollback
 DATE_TAG=$(date +%Y%m%d)
@@ -136,7 +136,8 @@ build_and_push() {
   docker build \
     --label "org.opencontainers.image.revision=${git_sha}" \
     --label "org.opencontainers.image.created=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-    --label "org.opencontainers.image.source=https://github.com/${GHCR_USER}/automata" \
+    --label "org.opencontainers.image.source=https://github.com/${GHCR_USER}/helix-core" \
+    --label "org.opencontainers.image.title=${name}" \
     --tag "${image}:latest" \
     --tag "${image}:${DATE_TAG}" \
     "${context}"
@@ -152,11 +153,11 @@ build_and_push() {
 
 # ─── pre-flight checks ────────────────────────────────────────────────────────
 
-header "automata image updater"
+header "helix image updater"
 
 # Confirm we are at the repo root
 if [[ ! -f "docker-compose.yml" ]]; then
-  error "Run this script from the automata repo root (where docker-compose.yml lives)."
+  error "Run this script from the helix-core repo root (where docker-compose.yml lives)."
   exit 1
 fi
 
@@ -204,10 +205,10 @@ if [[ "$FORCE" == false ]]; then
     success "${ML_CONTEXT} unchanged since last push — skipping"
   fi
 
-  # automata-ml depends on automata-base — if base changed, ml must also rebuild
+  # helix-ml depends on helix-base — if base changed, ml must also rebuild
   # even if its own Dockerfile did not change, because the base layer is different
   if [[ "$BUILD_BASE" == true && "$BUILD_ML" == false ]]; then
-    warn "automata-base changed — automata-ml inherits from it and must also rebuild"
+    warn "helix-base changed — helix-ml inherits from it and must also rebuild"
     BUILD_ML=true
   fi
 fi
@@ -223,8 +224,8 @@ if [[ "$BUILD_BASE" == false && "$BUILD_ML" == false ]]; then
   exit 0
 fi
 
-[[ "$BUILD_BASE" == true ]] && info "Will build: automata-base" || info "Skip:       automata-base (unchanged)"
-[[ "$BUILD_ML"   == true ]] && info "Will build: automata-ml"   || info "Skip:       automata-ml (unchanged)"
+[[ "$BUILD_BASE" == true ]] && info "Will build: helix-base" || info "Skip:       helix-base (unchanged)"
+[[ "$BUILD_ML"   == true ]] && info "Will build: helix-ml"   || info "Skip:       helix-ml (unchanged)"
 
 if [[ "$DRY_RUN" == true ]]; then
   warn "Dry run mode — no images will be built or pushed"
@@ -241,17 +242,17 @@ fi
 
 # Always build base before ml — ml inherits from base
 if [[ "$BUILD_BASE" == true ]]; then
-  build_and_push "automata-base" "${BASE_IMAGE}" "${BASE_CONTEXT}"
+  build_and_push "helix-base" "${BASE_IMAGE}" "${BASE_CONTEXT}"
 fi
 
 if [[ "$BUILD_ML" == true ]]; then
   # If we just rebuilt base, ensure docker uses the fresh local image
   # rather than a potentially cached remote layer
   if [[ "$BUILD_BASE" == true ]]; then
-    info "Tagging fresh automata-base:latest for automata-ml build context"
-    docker tag "${BASE_IMAGE}:latest" "automata-base:latest"
+    info "Tagging fresh helix-base:latest for helix-ml build context"
+    docker tag "${BASE_IMAGE}:latest" "helix-base:latest"
   fi
-  build_and_push "automata-ml" "${ML_IMAGE}" "${ML_CONTEXT}"
+  build_and_push "helix-ml" "${ML_IMAGE}" "${ML_CONTEXT}"
 fi
 
 # ─── done ─────────────────────────────────────────────────────────────────────

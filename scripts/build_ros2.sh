@@ -10,7 +10,7 @@ set -eo pipefail
 
 INSTALL_BASE="/ros2_ws/install"
 BUILD_BASE="/tmp/colcon_build"
-SRC_BASE="/workspace/ros2_ws/src"
+SRC_BASE="/workspace/projects/demos/ros2_ws/src"
 
 echo "[build_ros2] sourcing ROS2..."
 source /opt/ros/jazzy/setup.bash

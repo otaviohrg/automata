@@ -1,0 +1,103 @@
+name: Handle infrasctructure
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'infra/**'
+  pull_request:
+    paths:
+      - 'infra/**'
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.7"
+      - name: Terraform fmt
+        run: terraform fmt -check -recursive infra/terraform/
+      - name: Terraform validate
+        run: |
+          cd infra/terraform/environments/prod
+          terraform init -backend=false
+          terraform validate
+
+  ansible-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Ansible and ansible-lint
+        run: pip install ansible ansible-lint
+      - name: Install Ansible collections
+        run: |
+          ansible-galaxy collection install community.general
+          ansible-galaxy collection install kewlfft.aur
+      - name: Create vault password file
+        run: printf '%s' "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > ~/.ansible_vault_pass
+      - name: Run ansible-lint
+        run: |
+          cd infra/ansible
+          ansible-lint playbooks/
+
+  telemetry-server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: shared/telemetry_server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: shared/telemetry_server/go.mod
+          cache-dependency-path: shared/telemetry_server/go.sum
+      - name: Install protoc
+        run: sudo apt-get install -y protobuf-compiler
+      - name: Install protoc plugins
+        run: |
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+      - name: Generate proto stubs
+        run: |
+          protoc \
+            --go_out=. --go-grpc_out=. \
+            --go_opt=paths=source_relative \
+            --go-grpc_opt=paths=source_relative \
+            -I . proto/telemetry.proto
+      - name: Vet
+        run: go vet ./...
+      - name: Test
+        run: go test -race ./...
+
+  firmware:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: shared/firmware
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: shared/firmware
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --all-targets --all-features -- -D warnings
+      - run: cargo test --all
+
+  sdk:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: shared/sdk
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Install and test
+        run: |
+          uv venv .venv
+          uv pip install -e ".[dev]"
+          .venv/bin/pytest tests/ -v

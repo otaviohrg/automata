@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Test client for the Go telemetry gRPC server.
-Runs inside the automata-base container.
+Runs inside the helix-base container.
 The server runs natively on the host.
 network_mode: host in docker-compose means localhost resolves to the host.
 """

@@ -12,7 +12,7 @@ proto:
 		--go_opt=paths=source_relative \
 		--go-grpc_opt=paths=source_relative \
 		proto/telemetry.proto
-	docker compose run --rm automata-base bash -c \
+	docker compose run --rm helix-base bash -c \
 		"python -m grpc_tools.protoc \
 			-I /workspace/shared/telemetry_server \
 			--python_out=/workspace/shared/telemetry_server \
@@ -25,7 +25,7 @@ test:
 
 # Run Python test client against a running server
 test-client:
-	docker compose run --rm automata-base \
+	docker compose run --rm helix-base \
 		python3 /workspace/shared/telemetry_server/test_client.py
 
 # Format and vet
